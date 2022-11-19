@@ -1,6 +1,7 @@
 package plataformas.demo.controladores;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,23 +23,21 @@ public class Controladores {
     //@PostMapping("/login")
 
     @PostMapping("/registro")
-    public ResponseEntity<Usuario> registro(@RequestBody Usuario usuario) throws Exception{
+    public ResponseEntity<?> registro(@RequestBody Usuario usuario) throws Exception{
 
         try {
-            usuarioRepo.save(usuario);
-            return new ResponseEntity<>(usuario, HttpStatus.OK);            
+            Usuario _usuario = usuarioRepo.findByEmail(usuario.getEmail());
+
+            if(_usuario==null){
+                usuarioRepo.save(usuario);
+                return new ResponseEntity<>(usuario.getEmail(), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("Usuario duplicado", HttpStatus.OK);
+            }
+
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @GetMapping("/registro")
-    public String obtenerUsuario(@RequestParam String email) throws Exception{
-    
-            Usuario usuario = usuarioRepo.findByEmail(email);
-
-            return  usuario.getNombre();
-
     }
 
     @GetMapping("/alquiladas")
