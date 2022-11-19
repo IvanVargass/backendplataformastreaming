@@ -18,53 +18,57 @@ public class Controladores {
 
     @Autowired
     UsuarioRepo usuarioRepo;
-    
-    //@PostMapping("/login")
+
+    @GetMapping("/")
+    public String Home() {
+        return "Hola Mundo";
+    }
+
+    // @PostMapping("/login")
 
     @PostMapping("/registro")
-    public ResponseEntity<Usuario> registro(@RequestBody Usuario usuario) throws Exception{
+    public ResponseEntity<Usuario> registro(@RequestBody Usuario usuario) throws Exception {
 
         try {
             usuarioRepo.save(usuario);
-            return new ResponseEntity<>(usuario, HttpStatus.OK);            
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/registro")
-    public String obtenerUsuario(@RequestParam String email) throws Exception{
-    
-            Usuario usuario = usuarioRepo.findByEmail(email);
+    public String obtenerUsuario(@RequestParam String email) throws Exception {
 
-            return  usuario.getNombre();
+        Usuario usuario = usuarioRepo.findByEmail(email);
+
+        return usuario.getNombre();
 
     }
 
     @GetMapping("/alquiladas")
-    public String obtenerAlquiladas(){
+    public String obtenerAlquiladas() {
         return "alquiladas";
     }
 
     @PostMapping("/alquiladas")
-    public String guardarAlquilada(){
+    public String guardarAlquilada() {
         return "alquiladas";
     }
 
     @DeleteMapping("/alquiladas")
-    public String borrarAlquilada(){
+    public String borrarAlquilada() {
         return "alquiladas";
     }
 
     @GetMapping("/pelicula")
-    public String obtenerPeliculasCatologo(){
+    public String obtenerPeliculasCatologo() {
         return "Películas catálogo admin";
     }
 
     @PostMapping("/pelicula")
-    public String agregarPeliculasCatologo(){
+    public String agregarPeliculasCatologo() {
         return "Agregar pelis al catálogo";
     }
-
 
 }
