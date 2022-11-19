@@ -1,8 +1,12 @@
 package plataformas.demo.modelos;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 
@@ -12,9 +16,9 @@ public class PeliculaAlquilada {
         @Id 
         private long idAlquilada;
 
-        @Column
-        private long idPelicula;
+        @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+        private PeliculaCatalogo peliculaCatalogo;
 
-        @Column
-        private String email;
+        @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+        private Usuario usuario;   
 }

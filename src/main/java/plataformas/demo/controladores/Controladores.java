@@ -1,5 +1,7 @@
 package plataformas.demo.controladores;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import plataformas.demo.modelos.PeliculaAlquilada;
 import plataformas.demo.modelos.Usuario;
+import plataformas.demo.repositorios.PeliculaAlquiladaRepo;
 import plataformas.demo.repositorios.UsuarioRepo;
 
 @RestController
@@ -19,6 +23,9 @@ public class Controladores {
 
     @Autowired
     UsuarioRepo usuarioRepo;
+
+    @Autowired
+    PeliculaAlquiladaRepo peliculaAlquiladaRepo;
     
     //@PostMapping("/login")
 
@@ -41,7 +48,7 @@ public class Controladores {
     }
 
     @GetMapping("/alquiladas")
-    public String obtenerAlquiladas(){
+    public ResponseEntity<List<PeliculaAlquilada>> obtenerAlquiladas(){
         return "alquiladas";
     }
 
