@@ -10,10 +10,6 @@ INSERT INTO PELICULA_CATALOGO VALUES
 
 INSERT INTO USUARIO VALUES
 
-('rodomail', 'rodo', 'pass', 'ADMIN'),
+('admin', 'nombreadmin', 'admin', 'ADMIN'),
 
-('rodomail2', 'rodo2', 'pass2', 'USER');
-
-/*INSERT INTO PELICULA_ALQUILADA VALUES
-
-(1, 2, 'rodomail2');*/
+('user', 'nombreUser', 'user', 'USER');
