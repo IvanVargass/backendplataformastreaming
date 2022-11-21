@@ -30,7 +30,7 @@ import lombok.ToString;
 public class PeliculaAlquilada {
 
         @Id
-        @GeneratedValue(strategy=GenerationType.IDENTITY)
+        @GeneratedValue
         private long idAlquilada;
 
         @ManyToOne
