@@ -5,9 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class PeliculaCatalogo {
 
     @Id
@@ -31,4 +33,14 @@ public class PeliculaCatalogo {
     @Column
     private String overview;
 
+    public PeliculaCatalogo(long idPelicula, String poster_path, String title, String release_date,
+            String original_language, String vote_average, String overview) {
+        this.idPelicula = idPelicula;
+        this.poster_path = poster_path;
+        this.title = title;
+        this.release_date = release_date;
+        this.original_language = original_language;
+        this.vote_average = vote_average;
+        this.overview = overview;
+    }
 }

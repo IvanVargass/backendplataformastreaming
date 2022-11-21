@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import plataformas.demo.modelos.PeliculaCatalogo;
 import plataformas.demo.modelos.Usuario;
+import plataformas.demo.repositorios.PeliculaCatalogoRepo;
 import plataformas.demo.repositorios.UsuarioRepo;
 
 @RestController
@@ -18,6 +20,9 @@ public class Controladores {
 
     @Autowired
     UsuarioRepo usuarioRepo;
+
+    @Autowired
+    PeliculaCatalogoRepo peliculaCatalogoRepo;
 
     @GetMapping("/")
     public String Home() {
@@ -28,10 +33,9 @@ public class Controladores {
 
     @PostMapping("/registro")
     public ResponseEntity<Usuario> registro(@RequestBody Usuario usuario) throws Exception {
-
         try {
             usuarioRepo.save(usuario);
-            return new ResponseEntity<>(usuario, HttpStatus.OK);
+            return new ResponseEntity<>(usuario, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -62,13 +66,20 @@ public class Controladores {
     }
 
     @GetMapping("/pelicula")
-    public String obtenerPeliculasCatologo() {
-        return "Películas catálogo admin";
+    public String obtenerPeliculasCatologo(@RequestBody long id) throws Exception {
+
+        // PeliculaCatalogo pelicula = peliculaCatalogoRepo.findByPeliculaCatalogo(id);
+        return "Hola"; // pelicula.getTitle();
     }
 
     @PostMapping("/pelicula")
-    public String agregarPeliculasCatologo() {
-        return "Agregar pelis al catálogo";
+    public ResponseEntity<PeliculaCatalogo> registrarPeliculaCatalogo(@RequestBody PeliculaCatalogo Pelicula)
+            throws Exception {
+        try {
+            peliculaCatalogoRepo.save(Pelicula);
+            return new ResponseEntity<>(Pelicula, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
 }
