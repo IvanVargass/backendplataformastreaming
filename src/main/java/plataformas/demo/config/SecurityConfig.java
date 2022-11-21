@@ -3,6 +3,8 @@ package plataformas.demo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,21 +21,20 @@ public class SecurityConfig {
         http
         .csrf()
         .disable()
-        .cors().disable()
-        //.and() 
-        //.httpBasic()
-        
+        .cors()
+        .and() 
+        .httpBasic()
+        .and()
         .authorizeRequests()
         .antMatchers("/h2-console/**").permitAll()
         .antMatchers("/registro").permitAll()
+        .antMatchers("/login").permitAll()
         .antMatchers("/alquilada").hasAuthority("USER")
-        .antMatchers("/pelicula").permitAll()
+        //.antMatchers("/pelicula").permitAll()
         //.antMatchers(HttpMethod.GET, "/pelicula").hasAnyAuthority("USER", "ADMIN")
         .antMatchers(HttpMethod.POST, "/pelicula").hasAuthority("ADMIN")
         .antMatchers(HttpMethod.DELETE, "/pelicula").hasAuthority("ADMIN")
         .anyRequest().authenticated()
-        .and()    
-        .formLogin()
         .and()
         .headers().frameOptions().sameOrigin();
         
@@ -43,6 +44,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    @Bean 
+    public AuthenticationManager getAuthenticationManager(HttpSecurity http) throws Exception{
+        return http.getSharedObject(AuthenticationManagerBuilder.class).build();
     }
 
 }
