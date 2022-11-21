@@ -38,6 +38,10 @@ public class Controladores {
     PeliculaAlquiladaRepo peliculaAlquiladaRepo;
     
     //@PostMapping("/login")
+    @GetMapping("/")
+    public String homePruebas(){
+        return "Hola mundo";
+    }
 
     @PostMapping("/registro")
     public ResponseEntity<?> registro(@RequestBody Usuario usuario) throws Exception{
