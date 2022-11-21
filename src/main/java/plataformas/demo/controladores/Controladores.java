@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 public class Controladores {
 
     @Autowired
@@ -36,8 +38,8 @@ public class Controladores {
 
     @Autowired
     PeliculaAlquiladaRepo peliculaAlquiladaRepo;
-    
-    //@PostMapping("/login")
+
+
     @GetMapping("/")
     public String homePruebas(){
         return "Hola mundo";
@@ -60,7 +62,29 @@ public class Controladores {
         }
     }
 
-    @GetMapping("/alquiladas")
+    @GetMapping("/login")
+    public String holaLogin(){
+        return "Hola Login";
+    }
+
+    /* @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody String body) throws Exception{
+        try {
+            Usuario _usuario = usuarioRepo.findByEmail(usuario.getEmail());
+
+            if(_usuario==null){
+                usuarioRepo.save(usuario);
+                return new ResponseEntity<>(usuario.getEmail(), HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>("usuario duplicado", HttpStatus.OK);
+            }
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    } */
+
+    @GetMapping("/alquilada")
     public ResponseEntity<List<PeliculaAlquilada>> obtenerAlquiladas(@RequestParam String email) throws Exception{
         try {
 
@@ -78,7 +102,7 @@ public class Controladores {
         }
     }
 
-    @PostMapping("/alquiladas")
+    @PostMapping("/alquilada")
     public ResponseEntity<?> guardarAlquilada(@RequestBody String body){
         try {
             JSONObject json = new JSONObject(body);
@@ -102,7 +126,7 @@ public class Controladores {
         }
     }
 
-    @DeleteMapping("/alquiladas")
+    @DeleteMapping("/alquilada")
     public ResponseEntity<HttpStatus> borrarAlquilada(@RequestParam long id ){
         try {
             peliculaAlquiladaRepo.deleteById(id);

@@ -14,6 +14,6 @@ INSERT INTO USUARIO VALUES
 
 ('rodomail2', 'rodo2', 'pass2', 'USER');
 
-INSERT INTO PELICULA_ALQUILADA VALUES
+/*INSERT INTO PELICULA_ALQUILADA VALUES
 
-(1, 2, 'rodomail2');
+(1, 2, 'rodomail2');*/
