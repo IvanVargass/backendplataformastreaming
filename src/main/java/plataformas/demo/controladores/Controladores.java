@@ -78,7 +78,7 @@ public class Controladores {
     public ResponseEntity<?> guardarAlquilada(@RequestBody String body){
         try {
             JSONObject json = new JSONObject(body);
-            Long idPelicula = Long.parseLong((String) json.get("idPelicula"));
+            Long idPelicula =  json.getLong("idPelicula");
             String email = (String) json.get("email");
             
             PeliculaCatalogo peliculaCatalogo = peliculaCatalogoRepo.findByIdPelicula(idPelicula);
@@ -94,6 +94,7 @@ public class Controladores {
             }            
         } catch (Exception e) {
             // TODO: handle exception
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
