@@ -32,15 +32,11 @@ public class SecurityConfig {
         .antMatchers(HttpMethod.POST, "/pelicula").hasAuthority("ADMIN")
         .antMatchers(HttpMethod.DELETE, "/pelicula").hasAuthority("ADMIN")
         .anyRequest().authenticated()
-        .and()
-        
+        .and()    
         .formLogin()
-        .loginPage("/login")
-        .permitAll()
-        .
         .and()
         .headers().frameOptions().sameOrigin();
-
+        
         return http.build();
     }
 
