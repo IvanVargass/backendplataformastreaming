@@ -1,4 +1,4 @@
-INSERT INTO PELICULA_CATALOGO VALUES
+INSERT INTO `PELICULA_CATALOGO` VALUES
 
 (1, 'espanol', 'muy buena', 'poster', 'fecha', 'titulo', '3/5'),
 
@@ -8,12 +8,9 @@ INSERT INTO PELICULA_CATALOGO VALUES
 
 (4, 'espanol4', 'muy buena 4', 'poster4', 'fecha4', 'titulo4', '3/5 4');
 
-INSERT INTO USUARIO VALUES
+INSERT INTO `usuario` VALUES ('rodomail','rodo2','pass2','USER'),
+('rodomail2','rodo2','pass2','USER');
 
-('rodomail', 'rodo', 'pass', 'ADMIN'),
-
-('rodomail2', 'rodo2', 'pass2', 'USER');
-
-INSERT INTO PELICULA_ALQUILADA VALUES
+INSERT INTO `PELICULA_ALQUILADA` VALUES
 
 (1, 2, 'rodomail2');

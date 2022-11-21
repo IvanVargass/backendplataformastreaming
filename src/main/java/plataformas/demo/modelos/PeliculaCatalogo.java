@@ -8,10 +8,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class PeliculaCatalogo {
 
     @Id
@@ -35,7 +42,7 @@ public class PeliculaCatalogo {
     @Column
     private String overview;
 
-    @OneToMany(mappedBy = "peliculaCatalogo", orphanRemoval = true,cascade = CascadeType.ALL)
-    private List<PeliculaAlquilada> peliculaAlquiladas;
+    
 
+    
 }

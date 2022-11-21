@@ -10,16 +10,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Usuario {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long idUsuario;
 
     @Column
     private String nombre;
@@ -41,6 +45,5 @@ public class Usuario {
         this.nombre = role; 
     }
 
-    @OneToMany(mappedBy = "usuario", orphanRemoval = true,cascade = CascadeType.ALL)
-    List<PeliculaAlquilada> peliculasAlquiladas;
+    
 }
