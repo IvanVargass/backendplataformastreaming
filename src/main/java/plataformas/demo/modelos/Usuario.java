@@ -41,9 +41,8 @@ public class Usuario {
     public Usuario(String nombre, String email, String password, String role){
         this.nombre = nombre; 
         this.email = email; 
-        this.nombre = password; 
+        this.password = password; 
         this.nombre = role; 
     }
-
     
 }
