@@ -31,7 +31,7 @@ public class SecurityConfig {
         .antMatchers("/login").permitAll()
         .antMatchers("/alquilada").hasAuthority("USER")
         //.antMatchers("/pelicula").permitAll()
-        //.antMatchers(HttpMethod.GET, "/pelicula").hasAnyAuthority("USER", "ADMIN")
+        .antMatchers(HttpMethod.GET, "/pelicula").hasAnyAuthority("USER", "ADMIN")
         .antMatchers(HttpMethod.POST, "/pelicula").hasAuthority("ADMIN")
         .antMatchers(HttpMethod.DELETE, "/pelicula").hasAuthority("ADMIN")
         .anyRequest().authenticated()

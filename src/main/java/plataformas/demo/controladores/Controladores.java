@@ -71,7 +71,7 @@ public class Controladores {
         }
     }
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public String login(@RequestBody String body, final HttpServletRequest request) {
 
         JSONObject json = new JSONObject(body);
