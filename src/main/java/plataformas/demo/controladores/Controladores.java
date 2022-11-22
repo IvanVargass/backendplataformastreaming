@@ -38,7 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins="http://localhost:3000", allowCredentials = "true")
 public class Controladores {
 
     @Autowired
