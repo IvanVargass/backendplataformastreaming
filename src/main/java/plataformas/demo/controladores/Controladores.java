@@ -53,24 +53,20 @@ public class Controladores {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    @GetMapping("/")
-    public String homePruebas() {
-        return "Hola mundo";
-    }
-
     @PostMapping("/registro")
     public ResponseEntity<?> registro(@RequestBody Usuario usuario) throws Exception {
         try {
             Usuario _usuario = usuarioRepo.findByEmail(usuario.getEmail());
 
             if (_usuario == null) {
-                usuarioRepo.save(usuario);
-                return new ResponseEntity<>(usuario.getEmail(), HttpStatus.CREATED);
+                _usuario = usuarioRepo.save(usuario);
+                return new ResponseEntity<>("{ \"user\":\""+_usuario.getEmail()+"\", \"role\":\""+_usuario.getRole()+"\"}", HttpStatus.CREATED);
             } else {
                 return new ResponseEntity<>("usuario duplicado", HttpStatus.OK);
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -106,7 +102,7 @@ public class Controladores {
     }
 
     @GetMapping("/alquilada")
-    public ResponseEntity<List<PeliculaAlquilada>> obtenerAlquiladas(@RequestParam String email) throws Exception {
+    public ResponseEntity<List<PeliculaCatalogo>> obtenerAlquiladas(@RequestParam String email) throws Exception {
         try {
 
             List<PeliculaAlquilada> peliculasAlquiladas = new ArrayList<PeliculaAlquilada>();
@@ -116,7 +112,11 @@ public class Controladores {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            return new ResponseEntity<>(peliculasAlquiladas, HttpStatus.OK);
+            List<PeliculaCatalogo> peliculasCatalogo = new ArrayList<>();
+            for(PeliculaAlquilada peliculaAlquilada:peliculasAlquiladas){
+                peliculasCatalogo.add(peliculaAlquilada.getPeliculaCatalogo());
+            }
+            return new ResponseEntity<>(peliculasCatalogo, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -124,11 +124,12 @@ public class Controladores {
     }
 
     @PostMapping("/alquilada")
-    public ResponseEntity<?> guardarAlquilada(@RequestBody String body) {
+    public ResponseEntity<?> guardarAlquilada(@RequestBody String body, Principal principal) {
         try {
             JSONObject json = new JSONObject(body);
             Long idPelicula = json.getLong("idPelicula");
-            String email = (String) json.get("email");
+
+            String email = principal.getName();
 
             PeliculaCatalogo peliculaCatalogo = peliculaCatalogoRepo.findByIdPelicula(idPelicula);
             Usuario usuario = usuarioRepo.findByEmail(email);
@@ -137,7 +138,7 @@ public class Controladores {
 
             if (peliculaAlquiladaRepo.findByPeliculaCatalogoAndUsuario(peliculaCatalogo, usuario) == null) {
                 peliculaAlquiladaRepo.save(peliculaAlquilada);
-                return new ResponseEntity<>(peliculaAlquilada.getPeliculaCatalogo().getIdPelicula(), HttpStatus.OK);
+                return new ResponseEntity<>("{ \"idPelicula\": \""+peliculaAlquilada.getPeliculaCatalogo().getIdPelicula()+"\" }", HttpStatus.OK);
             } else {
 
                 return new ResponseEntity<>("duplicada", HttpStatus.OK);
@@ -192,7 +193,7 @@ public class Controladores {
     public ResponseEntity<String> borrarPeliculaCatalogo(@RequestParam long id) {
         try {
             peliculaCatalogoRepo.deleteById(id);
-            String respuesta = "{'estado':'borrada','idPelicula':" + id + "}";
+            String respuesta = "{\"estado\":\"borrada\",\"idPelicula\":" + id + "}";
             return new ResponseEntity<>(respuesta, HttpStatus.OK);
         } catch (Exception e) {
 
