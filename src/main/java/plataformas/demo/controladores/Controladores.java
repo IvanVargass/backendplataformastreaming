@@ -179,10 +179,14 @@ public class Controladores {
     }
 
     @PostMapping("/pelicula")
-    public ResponseEntity<PeliculaCatalogo> agregarPeliculaCatalogo(@RequestBody PeliculaCatalogo peliculaCatalogo) {
+    public ResponseEntity<?> agregarPeliculaCatalogo(@RequestBody PeliculaCatalogo peliculaCatalogo) {
         try {
-            peliculaCatalogoRepo.save(peliculaCatalogo);
-            return new ResponseEntity<>(peliculaCatalogo, HttpStatus.OK);
+            if(peliculaCatalogoRepo.findByIdPelicula(peliculaCatalogo.getIdPelicula())==null){
+                peliculaCatalogoRepo.save(peliculaCatalogo);
+                return new ResponseEntity<>(peliculaCatalogo, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("pelicula duplicada", HttpStatus.OK);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
