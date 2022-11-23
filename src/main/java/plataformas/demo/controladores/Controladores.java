@@ -2,6 +2,7 @@ package plataformas.demo.controladores;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,9 +65,13 @@ public class Controladores {
 
             if (_usuario == null) {
                 _usuario = usuarioRepo.save(usuario);
-                return new ResponseEntity<>(
-                        "{ \"user\":\"" + _usuario.getEmail() + "\", \"role\":\"" + _usuario.getRole() + "\"}",
-                        HttpStatus.CREATED);
+
+                JSONObject response = new JSONObject();
+                response.put("email", usuario.getEmail());
+                response.put("nombre", usuario.getNombre());
+                response.put("role", usuario.getRole());
+
+                return new ResponseEntity<>(response.toString(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("duplicado", HttpStatus.OK);
             }
@@ -104,7 +109,12 @@ public class Controladores {
             }
 
         }
-        return "{ \"user\":\"" + user.getEmail() + "\", \"role\":\"" + user.getRole() + "\"}";
+        JSONObject response = new JSONObject();
+        response.put("email", user.getEmail());
+        response.put("nombre", user.getNombre());
+        response.put("role", user.getRole());
+
+        return response.toString();
     }
 
     @GetMapping("/alquilada")
@@ -146,8 +156,13 @@ public class Controladores {
 
             if (peliculaAlquiladaRepo.findByPeliculaCatalogoAndUsuario(peliculaCatalogo, usuario) == null) {
                 peliculaAlquiladaRepo.save(peliculaAlquilada);
+
+                JSONObject response = new JSONObject();
+                response.put("estado","guardada");
+                response.put("idPelicula",peliculaAlquilada.getPeliculaCatalogo().getIdPelicula());
+                
                 return new ResponseEntity<>(
-                        "{ \"idPelicula\": \"" + peliculaAlquilada.getPeliculaCatalogo().getIdPelicula() + "\" }",
+                        response.toString(),
                         HttpStatus.OK);
             } else {
 
@@ -164,8 +179,12 @@ public class Controladores {
     public ResponseEntity<String> borrarAlquilada(@RequestParam long id) {
         try {
             peliculaAlquiladaRepo.deleteById(id);
-            String respuesta = "{'estado':'borrada','idAlquilada':" + id + "}";
-            return new ResponseEntity<>(respuesta, HttpStatus.OK);
+
+            JSONObject response = new JSONObject();
+            response.put("estado", "borrada");
+            response.put("idAlquilada", id);
+            
+            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
