@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -18,7 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 @RestController
-@CrossOrigin(origins="http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class Controladores {
 
     @Autowired
@@ -60,9 +64,11 @@ public class Controladores {
 
             if (_usuario == null) {
                 _usuario = usuarioRepo.save(usuario);
-                return new ResponseEntity<>("{ \"user\":\""+_usuario.getEmail()+"\", \"role\":\""+_usuario.getRole()+"\"}", HttpStatus.CREATED);
+                return new ResponseEntity<>(
+                        "{ \"user\":\"" + _usuario.getEmail() + "\", \"role\":\"" + _usuario.getRole() + "\"}",
+                        HttpStatus.CREATED);
             } else {
-                return new ResponseEntity<>("usuario duplicado", HttpStatus.OK);
+                return new ResponseEntity<>("duplicado", HttpStatus.OK);
             }
 
         } catch (Exception e) {
@@ -78,10 +84,10 @@ public class Controladores {
         String email = (String) json.get("email");
         String password = (String) json.get("password");
 
-        Usuario user =  usuarioRepo.findByEmail(email);
+        Usuario user = usuarioRepo.findByEmail(email);
 
         if (user == null) {
-            return "usuario no existe" ;
+            return "usuario no existe";
         } else {
 
             try {
@@ -98,14 +104,16 @@ public class Controladores {
             }
 
         }
-        return "{ \"user\":\""+user.getEmail()+"\", \"role\":\""+user.getRole()+"\"}";
+        return "{ \"user\":\"" + user.getEmail() + "\", \"role\":\"" + user.getRole() + "\"}";
     }
 
     @GetMapping("/alquilada")
-    public ResponseEntity<List<PeliculaCatalogo>> obtenerAlquiladas(@RequestParam String email) throws Exception {
+    public ResponseEntity<List<PeliculaCatalogo>> obtenerAlquiladas(Principal principal) throws Exception {
         try {
 
             List<PeliculaAlquilada> peliculasAlquiladas = new ArrayList<PeliculaAlquilada>();
+            String email = principal.getName();
+
             peliculasAlquiladas = peliculaAlquiladaRepo.findByUsuarioEmail(email);
 
             if (peliculasAlquiladas.isEmpty()) {
@@ -113,7 +121,7 @@ public class Controladores {
             }
 
             List<PeliculaCatalogo> peliculasCatalogo = new ArrayList<>();
-            for(PeliculaAlquilada peliculaAlquilada:peliculasAlquiladas){
+            for (PeliculaAlquilada peliculaAlquilada : peliculasAlquiladas) {
                 peliculasCatalogo.add(peliculaAlquilada.getPeliculaCatalogo());
             }
             return new ResponseEntity<>(peliculasCatalogo, HttpStatus.OK);
@@ -138,7 +146,9 @@ public class Controladores {
 
             if (peliculaAlquiladaRepo.findByPeliculaCatalogoAndUsuario(peliculaCatalogo, usuario) == null) {
                 peliculaAlquiladaRepo.save(peliculaAlquilada);
-                return new ResponseEntity<>("{ \"idPelicula\": \""+peliculaAlquilada.getPeliculaCatalogo().getIdPelicula()+"\" }", HttpStatus.OK);
+                return new ResponseEntity<>(
+                        "{ \"idPelicula\": \"" + peliculaAlquilada.getPeliculaCatalogo().getIdPelicula() + "\" }",
+                        HttpStatus.OK);
             } else {
 
                 return new ResponseEntity<>("duplicada", HttpStatus.OK);
@@ -181,11 +191,11 @@ public class Controladores {
     @PostMapping("/pelicula")
     public ResponseEntity<?> agregarPeliculaCatalogo(@RequestBody PeliculaCatalogo peliculaCatalogo) {
         try {
-            if(peliculaCatalogoRepo.findByIdPelicula(peliculaCatalogo.getIdPelicula())==null){
+            if (peliculaCatalogoRepo.findByIdPelicula(peliculaCatalogo.getIdPelicula()) == null) {
                 peliculaCatalogoRepo.save(peliculaCatalogo);
                 return new ResponseEntity<>(peliculaCatalogo, HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>("pelicula duplicada", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("duplicada", HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,5 +215,21 @@ public class Controladores {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @GetMapping("/role")
+    public ResponseEntity<String> role(Principal principal) {
+        String role = usuarioRepo.findByEmail(principal.getName()).getRole();
+        return new ResponseEntity<>(role, HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    @GetMapping("/logoutSuccess")
+    public ResponseEntity<String> logoutSuccess(HttpServletRequest request) {
+        return new ResponseEntity<>("logout", HttpStatus.OK);
     }
 }
