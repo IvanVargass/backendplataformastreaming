@@ -251,4 +251,13 @@ public class Controladores {
     public ResponseEntity<String> logoutSuccess(HttpServletRequest request) {
         return new ResponseEntity<>("logout", HttpStatus.OK);
     }
+
+    @GetMapping("/logged")
+    public boolean isLogged(Principal principal){
+        if(principal==null){
+            return false;
+        }else{
+            return true;   
+        }
+    }
 }

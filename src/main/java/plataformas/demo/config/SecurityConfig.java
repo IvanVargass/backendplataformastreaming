@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .antMatchers("/registro").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/logoutSuccess").permitAll()
+                .antMatchers("/logged").permitAll()
                 .antMatchers("/alquilada").hasAuthority("USER")
                 .antMatchers(HttpMethod.GET, "/pelicula").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/pelicula").hasAuthority("ADMIN")
