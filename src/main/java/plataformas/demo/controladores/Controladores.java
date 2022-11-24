@@ -260,4 +260,16 @@ public class Controladores {
             return true;   
         }
     }
+
+    @GetMapping("/datauser")
+    public String dataUser(Principal principal){
+        Usuario usuario = usuarioRepo.findByEmail(principal.getName());
+
+        JSONObject response = new JSONObject();
+        response.put("email", usuario.getEmail());
+        response.put("nombre", usuario.getNombre());
+        response.put("role", usuario.getRole());
+
+        return response.toString();
+    }
 }
