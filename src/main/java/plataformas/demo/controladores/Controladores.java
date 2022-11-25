@@ -158,9 +158,9 @@ public class Controladores {
                 peliculaAlquiladaRepo.save(peliculaAlquilada);
 
                 JSONObject response = new JSONObject();
-                response.put("estado","guardada");
-                response.put("idPelicula",peliculaAlquilada.getPeliculaCatalogo().getIdPelicula());
-                
+                response.put("estado", "guardada");
+                response.put("idPelicula", peliculaAlquilada.getPeliculaCatalogo().getIdPelicula());
+
                 return new ResponseEntity<>(
                         response.toString(),
                         HttpStatus.OK);
@@ -183,13 +183,14 @@ public class Controladores {
             PeliculaCatalogo peliculaCatalogo = peliculaCatalogoRepo.findByIdPelicula(idPelicula);
             Usuario usuario = usuarioRepo.findByEmail(email);
 
-            PeliculaAlquilada peliculaAlquilada = peliculaAlquiladaRepo.findByPeliculaCatalogoAndUsuario(peliculaCatalogo, usuario);
+            PeliculaAlquilada peliculaAlquilada = peliculaAlquiladaRepo
+                    .findByPeliculaCatalogoAndUsuario(peliculaCatalogo, usuario);
             peliculaAlquiladaRepo.delete(peliculaAlquilada);
 
             JSONObject response = new JSONObject();
             response.put("estado", "borrada");
             response.put("idPelicula", idPelicula);
-            
+
             return new ResponseEntity<>(response.toString(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -231,10 +232,18 @@ public class Controladores {
     @DeleteMapping("/pelicula")
     public ResponseEntity<String> borrarPeliculaCatalogo(@RequestParam long idPelicula) {
         try {
-            System.out.println("////////////////////"+idPelicula);
-            peliculaCatalogoRepo.deleteById(idPelicula);
-            String respuesta = "{\"estado\":\"borrada\",\"idPelicula\":" + idPelicula + "}";
-            return new ResponseEntity<>(respuesta, HttpStatus.OK);
+            System.out.println("////////////////////" + idPelicula);
+            JSONObject response = new JSONObject();
+            if (peliculaCatalogoRepo.findByIdPelicula(idPelicula) != null) {
+
+                peliculaCatalogoRepo.deleteById(idPelicula);
+                
+                response.put("estado", "borrada");
+                response.put("idPelicula", idPelicula);
+
+            }
+
+            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -260,16 +269,16 @@ public class Controladores {
     }
 
     @GetMapping("/logged")
-    public boolean isLogged(Principal principal){
-        if(principal==null){
+    public boolean isLogged(Principal principal) {
+        if (principal == null) {
             return false;
-        }else{
-            return true;   
+        } else {
+            return true;
         }
     }
 
     @GetMapping("/datauser")
-    public String dataUser(Principal principal){
+    public String dataUser(Principal principal) {
         Usuario usuario = usuarioRepo.findByEmail(principal.getName());
 
         JSONObject response = new JSONObject();
