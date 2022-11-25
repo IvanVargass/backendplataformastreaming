@@ -7,5 +7,6 @@ import plataformas.demo.modelos.PeliculaCatalogo;
 
 @Repository
 public interface PeliculaCatalogoRepo extends JpaRepository<PeliculaCatalogo, Long>{
+    public void deleteByIdPelicula(long idPelicula);
     public PeliculaCatalogo findByIdPelicula(long idPelicula);
 }

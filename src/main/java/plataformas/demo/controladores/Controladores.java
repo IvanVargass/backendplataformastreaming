@@ -176,13 +176,13 @@ public class Controladores {
     }
 
     @DeleteMapping("/alquilada")
-    public ResponseEntity<String> borrarAlquilada(@RequestParam long id) {
+    public ResponseEntity<String> borrarAlquilada(@RequestParam long idAlquilada) {
         try {
-            peliculaAlquiladaRepo.deleteById(id);
+            peliculaAlquiladaRepo.deleteByIdAlquilada(idAlquilada);
 
             JSONObject response = new JSONObject();
             response.put("estado", "borrada");
-            response.put("idAlquilada", id);
+            response.put("idAlquilada", idAlquilada);
             
             return new ResponseEntity<>(response.toString(), HttpStatus.OK);
         } catch (Exception e) {

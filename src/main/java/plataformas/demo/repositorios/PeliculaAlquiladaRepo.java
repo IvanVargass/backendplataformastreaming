@@ -10,6 +10,7 @@ import plataformas.demo.modelos.Usuario;
 
 public interface PeliculaAlquiladaRepo extends JpaRepository<PeliculaAlquilada, Long> {
 
+    public void deleteByIdAlquilada(long idAlquilada);
     public PeliculaAlquilada findByPeliculaCatalogo(PeliculaCatalogo peliculaCatalogo);
     public PeliculaAlquilada findByPeliculaCatalogoAndUsuario(PeliculaCatalogo peliculaCatalogo, Usuario usuario);
     public List<PeliculaAlquilada> findByUsuarioEmail(String email);
