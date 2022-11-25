@@ -176,13 +176,19 @@ public class Controladores {
     }
 
     @DeleteMapping("/alquilada")
-    public ResponseEntity<String> borrarAlquilada(@RequestParam long idAlquilada) {
+    public ResponseEntity<String> borrarAlquilada(@RequestParam long idPelicula, Principal principal) {
         try {
-            peliculaAlquiladaRepo.deleteByIdAlquilada(idAlquilada);
+            String email = principal.getName();
+
+            PeliculaCatalogo peliculaCatalogo = peliculaCatalogoRepo.findByIdPelicula(idPelicula);
+            Usuario usuario = usuarioRepo.findByEmail(email);
+
+            PeliculaAlquilada peliculaAlquilada = peliculaAlquiladaRepo.findByPeliculaCatalogoAndUsuario(peliculaCatalogo, usuario);
+            peliculaAlquiladaRepo.delete(peliculaAlquilada);
 
             JSONObject response = new JSONObject();
             response.put("estado", "borrada");
-            response.put("idAlquilada", idAlquilada);
+            response.put("idPelicula", idPelicula);
             
             return new ResponseEntity<>(response.toString(), HttpStatus.OK);
         } catch (Exception e) {
@@ -223,10 +229,11 @@ public class Controladores {
     }
 
     @DeleteMapping("/pelicula")
-    public ResponseEntity<String> borrarPeliculaCatalogo(@RequestParam long id) {
+    public ResponseEntity<String> borrarPeliculaCatalogo(@RequestParam long idPelicula) {
         try {
-            peliculaCatalogoRepo.deleteById(id);
-            String respuesta = "{\"estado\":\"borrada\",\"idPelicula\":" + id + "}";
+            System.out.println("////////////////////"+idPelicula);
+            peliculaCatalogoRepo.deleteById(idPelicula);
+            String respuesta = "{\"estado\":\"borrada\",\"idPelicula\":" + idPelicula + "}";
             return new ResponseEntity<>(respuesta, HttpStatus.OK);
         } catch (Exception e) {
 
