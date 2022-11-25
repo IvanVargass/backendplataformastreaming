@@ -39,7 +39,7 @@ public class PeliculaCatalogo {
     @Column
     private String vote_average;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String overview;
 
     
